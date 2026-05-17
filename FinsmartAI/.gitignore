@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+*.whl
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+*.log
+*.txt
+!requirements.txt
+!requirements_updated.txt
+!test.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Lock files (large)
+uv.lock
+package-lock.json
+
+# Byte-compiled
+*.pyc
+
+# Environment files — catch ALL .env files project-wide
+.env
+**/.env
+*.env
+
+# Error logs
+error*.log
+error*.txt
+server.log
