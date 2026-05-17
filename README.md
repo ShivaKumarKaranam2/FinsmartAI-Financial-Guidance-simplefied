@@ -1,0 +1,1 @@
+# FinsmartAI-Financial-Guidance-simplefied
