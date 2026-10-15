@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   Send, User, Bot, AlertCircle, Paperclip, X,
   FileText, CheckCircle, MessageSquare, Hash
@@ -423,7 +424,7 @@ export default function ChatBot() {
                 }}>
                   {isUser ? msg.text : (
                     <div className="chat-md">
-                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.text}</ReactMarkdown>
                     </div>
                   )}
                 </div>

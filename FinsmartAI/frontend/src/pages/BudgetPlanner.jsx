@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Wallet, TrendingDown, PiggyBank, Sparkles, AlertTriangle, Lightbulb, Receipt } from 'lucide-react';
+import { Wallet, TrendingDown, PiggyBank, Sparkles, AlertTriangle, Lightbulb, Receipt, PieChart } from 'lucide-react';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -41,6 +42,7 @@ export default function BudgetPlanner() {
     const breakdown = result.analysis.expense_breakdown_by_category;
     const labels = Object.keys(breakdown);
     const data = Object.values(breakdown);
+    if (labels.length === 0 || data.every(v => v === 0)) return null;
     return (
       <Pie
         data={{
@@ -247,54 +249,96 @@ export default function BudgetPlanner() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '1.25rem', marginBottom: '1.25rem' }}>
 
             {/* Pie chart */}
-            <div style={{ background: 'var(--ink-1)', border: '1px solid var(--border-1)', borderRadius: 'var(--r-xl)', padding: '1.5rem' }}>
+            <div style={{ background: 'var(--ink-1)', border: '1px solid var(--border-1)', borderRadius: 'var(--r-xl)', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
                 Expense Breakdown
               </div>
-              <div style={{ maxWidth: '260px', margin: '0 auto' }}>
-                {renderChart()}
-              </div>
+              {renderChart() ? (
+                <div style={{ maxWidth: '260px', margin: '0 auto', width: '100%' }}>
+                  {renderChart()}
+                </div>
+              ) : (
+                <div style={{
+                  flex: 1, minHeight: '210px', display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '1.5rem 1rem'
+                }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: '50%', background: 'var(--ink-2)',
+                    border: '1px solid var(--border-1)', display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', color: 'var(--text-muted)', marginBottom: '0.75rem'
+                  }}>
+                    <PieChart size={20} />
+                  </div>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
+                    No Expense Breakdown
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', maxWidth: '220px', lineHeight: 1.4 }}>
+                    Add itemized expenses above to visualize your spending by category.
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Transactions list */}
-            <div style={{ background: 'var(--ink-1)', border: '1px solid var(--border-1)', borderRadius: 'var(--r-xl)', padding: '1.5rem' }}>
+            <div style={{ background: 'var(--ink-1)', border: '1px solid var(--border-1)', borderRadius: 'var(--r-xl)', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
                 Itemized Transactions
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '300px', overflowY: 'auto' }}>
-                {result.expenses?.map((exp, i) => (
-                  <div key={i} style={{
-                    padding: '0.875rem 1rem',
-                    background: 'var(--ink-2)',
-                    border: '1px solid var(--border-1)',
-                    borderRadius: 'var(--r-lg)',
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                    transition: 'background 0.15s',
-                  }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'var(--ink-3)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'var(--ink-2)'}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <div style={{
-                        width: 32, height: 32, borderRadius: 'var(--r-sm)',
-                        background: CHART_COLORS[i % CHART_COLORS.length] + '20',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: CHART_COLORS[i % CHART_COLORS.length],
-                        fontWeight: 700, fontSize: '0.85rem',
-                      }}>
-                        {exp.category?.charAt(0).toUpperCase()}
+              {result.expenses && result.expenses.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '300px', overflowY: 'auto' }}>
+                  {result.expenses.map((exp, i) => (
+                    <div key={i} style={{
+                      padding: '0.875rem 1rem',
+                      background: 'var(--ink-2)',
+                      border: '1px solid var(--border-1)',
+                      borderRadius: 'var(--r-lg)',
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      transition: 'background 0.15s',
+                    }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--ink-3)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'var(--ink-2)'}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{
+                          width: 32, height: 32, borderRadius: 'var(--r-sm)',
+                          background: CHART_COLORS[i % CHART_COLORS.length] + '20',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          color: CHART_COLORS[i % CHART_COLORS.length],
+                          fontWeight: 700, fontSize: '0.85rem',
+                        }}>
+                          {exp.category?.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{exp.category}</div>
+                          <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>{exp.description}</div>
+                        </div>
                       </div>
-                      <div>
-                        <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{exp.category}</div>
-                        <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>{exp.description}</div>
-                      </div>
+                      <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                        ₹{exp.amount?.toLocaleString()}
+                      </span>
                     </div>
-                    <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-                      ₹{exp.amount?.toLocaleString()}
-                    </span>
+                  ))}
+                </div>
+              ) : (
+                <div style={{
+                  flex: 1, minHeight: '210px', display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '1.5rem 1rem'
+                }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: '50%', background: 'var(--ink-2)',
+                    border: '1px solid var(--border-1)', display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', color: 'var(--text-muted)', marginBottom: '0.75rem'
+                  }}>
+                    <Receipt size={20} />
                   </div>
-                ))}
-              </div>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
+                    No Transactions Logged
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', maxWidth: '240px', lineHeight: 1.4 }}>
+                    Enter expenses in your query to view itemized transaction records.
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -311,7 +355,7 @@ export default function BudgetPlanner() {
                 </div>
               </div>
               <div className="advice-md">
-                <ReactMarkdown>{result.advice}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.advice}</ReactMarkdown>
               </div>
             </div>
           )}
@@ -320,13 +364,73 @@ export default function BudgetPlanner() {
 
       <style>{`
         .advice-md { line-height: 1.8; color: var(--text-secondary); font-size: 0.9rem; }
-        .advice-md h3 { font-size: 1rem; color: var(--text-primary); margin: 1.5rem 0 0.6rem; font-weight: 700; }
+        .advice-md h3 { font-size: 1.05rem; color: var(--text-primary); margin: 1.75rem 0 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
         .advice-md h3:first-child { margin-top: 0; }
+        .advice-md h4 { font-size: 0.95rem; color: var(--text-primary); margin: 1.25rem 0 0.5rem; font-weight: 600; }
         .advice-md p { margin-bottom: 1rem; }
         .advice-md strong { color: var(--blue-400); font-weight: 600; }
         .advice-md ul, .advice-md ol { padding-left: 1.25rem; margin-bottom: 1rem; }
         .advice-md li { margin-bottom: 0.4rem; }
         .advice-md li::marker { color: var(--blue-400); }
+
+        /* Beautiful GFM Table styling */
+        .advice-md table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0;
+          margin: 1.25rem 0;
+          font-size: 0.865rem;
+          border-radius: var(--r-lg);
+          overflow: hidden;
+          border: 1px solid var(--border-2);
+          background: var(--ink-2);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .advice-md th {
+          background: linear-gradient(135deg, rgba(75, 122, 255, 0.12), rgba(75, 122, 255, 0.04));
+          color: var(--blue-400);
+          font-weight: 700;
+          text-align: left;
+          padding: 0.85rem 1.1rem;
+          border-bottom: 2px solid var(--border-2);
+          font-size: 0.78rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          white-space: nowrap;
+        }
+        .advice-md td {
+          padding: 0.75rem 1.1rem;
+          border-bottom: 1px solid var(--border-1);
+          color: var(--text-primary);
+          transition: background 0.15s;
+        }
+        .advice-md tr:nth-child(even) td { background: rgba(255, 255, 255, 0.015); }
+        .advice-md tr:nth-child(odd) td { background: transparent; }
+        .advice-md tr:last-child td { border-bottom: none; }
+        .advice-md tr:hover td { background: var(--ink-3); }
+
+        .advice-md blockquote {
+          border-left: 3px solid var(--blue-400);
+          padding: 0.875rem 1.25rem;
+          margin: 1.25rem 0;
+          background: var(--blue-glow-soft);
+          border-radius: 0 var(--r-md) var(--r-md) 0;
+          font-style: italic;
+          color: var(--text-secondary);
+        }
+        .advice-md code {
+          background: var(--ink-3);
+          padding: 0.15rem 0.4rem;
+          border-radius: 4px;
+          font-size: 0.85em;
+          color: var(--amber-400);
+          font-family: var(--font-mono);
+        }
+        .advice-md hr {
+          border: none;
+          border-top: 1px solid var(--border-1);
+          margin: 1.5rem 0;
+        }
       `}</style>
     </div>
   );

@@ -1,1 +1,0 @@
-The final investment report for RELIANCE.NS is presented above, including an executive summary, key investment thesis, financial scorecard, and key risks and catalysts.

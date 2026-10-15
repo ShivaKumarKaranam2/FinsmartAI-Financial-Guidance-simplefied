@@ -55,3 +55,4 @@ package-lock.json
 error*.log
 error*.txt
 server.log
+.crewai

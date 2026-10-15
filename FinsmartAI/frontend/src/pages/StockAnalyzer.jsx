@@ -29,7 +29,7 @@ const POPULAR_STOCKS = [
 
 const STEPS = [
   { label: 'Data Retrieval',      icon: Search,    desc: 'Scraping real-time news & market feeds' },
-  { label: 'Quantitative Analysis', icon: LineChart, desc: 'Computing valuations & PE ratios' },
+  { label: 'Quantitative Analysis', icon: LineChartIcon, desc: 'Computing valuations & PE ratios' },
   { label: 'Qualitative Review', icon: FileText,  desc: 'Analyzing earnings & transcripts' },
   { label: 'AI Synthesis',       icon: Cpu,       desc: 'Generating investment thesis' },
 ];

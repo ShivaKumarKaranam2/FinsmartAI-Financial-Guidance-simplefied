@@ -1,1 +1,0 @@
-Based on the comprehensive analysis, I recommend a BUY rating for TCS.NS with a target price of ₹4,200, representing a 15% upside from the current price. The risk rating is Medium, considering the potential impacts of global economic conditions and technological disruptions.
