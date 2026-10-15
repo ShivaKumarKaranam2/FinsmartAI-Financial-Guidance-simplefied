@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { API_URL } from '../config';
 import { Radar, Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, ArcElement, PointElement, LineElement, Filler, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import {
@@ -200,7 +201,7 @@ export default function StockAnalyzer() {
     setLoading(true); setError(null); setResult(null);
     
     try {
-      const res = await fetch('http://localhost:8000/api/portfolio/analyze', {
+      const res = await fetch(`${API_URL}/api/portfolio/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ company: ticker }),

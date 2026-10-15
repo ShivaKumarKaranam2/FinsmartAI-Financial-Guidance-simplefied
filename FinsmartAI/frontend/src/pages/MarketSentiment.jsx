@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { Bar, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS, CategoryScale, LinearScale,
@@ -29,7 +30,7 @@ export default function MarketSentiment() {
     setError(null);
     try {
       const params = search ? { search } : {};
-      const response = await axios.get('http://localhost:8000/api/sentiment/market', { params });
+      const response = await axios.get(`${API_URL}/api/sentiment/market`, { params });
       setData(response.data);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to fetch market sentiment data.');
@@ -40,7 +41,7 @@ export default function MarketSentiment() {
 
   const fetchNifty50 = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/sentiment/nifty50');
+      const res = await axios.get(`${API_URL}/api/sentiment/nifty50`);
       setNiftyData(res.data);
     } catch (err) {
       console.warn('Nifty 50 data unavailable:', err.message);

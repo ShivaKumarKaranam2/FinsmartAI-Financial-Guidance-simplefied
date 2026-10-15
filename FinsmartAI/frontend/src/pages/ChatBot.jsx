@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { API_URL } from '../config';
 import {
   Send, User, Bot, AlertCircle, Paperclip, X,
   FileText, CheckCircle, MessageSquare, Hash
@@ -57,7 +58,7 @@ export default function ChatBot() {
     formData.append('file', file);
     formData.append('user_id', USER_ID);
     try {
-      const res = await axios.post('http://localhost:8000/api/rag/ingest', formData, {
+      const res = await axios.post(`${API_URL}/api/rag/ingest`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       const { session_id, chunks_ingested } = res.data;
@@ -95,7 +96,7 @@ export default function ChatBot() {
     if (sessionId) {
       setMessages(prev => [...prev, { role: 'assistant', text: '' }]);
       try {
-        const response = await fetch('http://localhost:8000/api/rag/query/stream', {
+        const response = await fetch(`${API_URL}/api/rag/query/stream`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -176,7 +177,7 @@ export default function ChatBot() {
     setMessages(prev => [...prev, { role: 'assistant', text: '' }]);
 
     try {
-      const response = await fetch('http://localhost:8000/api/finance_rag/query/stream', {
+      const response = await fetch(`${API_URL}/api/finance_rag/query/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

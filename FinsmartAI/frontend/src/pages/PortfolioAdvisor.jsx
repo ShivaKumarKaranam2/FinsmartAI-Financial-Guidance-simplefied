@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
@@ -21,7 +22,7 @@ export default function PortfolioAdvisor() {
         setResult(null);
         setAiGuidance('');
         try {
-            const res = await axios.post('http://localhost:8000/api/portfolio/recommendation', {
+            const res = await axios.post(`${API_URL}/api/portfolio/recommendation`, {
                 savings_amount: parseFloat(savingsAmount) || 0
             });
             setResult(res.data);
@@ -45,7 +46,7 @@ export default function PortfolioAdvisor() {
                 expenses_by_category: { 'General': result.input_savings * 2 }
             };
 
-            const res = await axios.post('http://localhost:8000/api/portfolio/ai-advisor', {
+            const res = await axios.post(`${API_URL}/api/portfolio/ai-advisor`, {
                 cash_flow_summary: mockCashFlow,
                 financial_goals: "Long-term wealth building",
                 risk_tolerance: "Moderate"

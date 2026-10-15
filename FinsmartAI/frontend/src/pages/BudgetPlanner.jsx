@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Pie } from 'react-chartjs-2';
@@ -25,7 +26,7 @@ export default function BudgetPlanner() {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post('http://localhost:8000/api/budget/analyze', {
+      const res = await axios.post(`${API_URL}/api/budget/analyze`, {
         income_text: incomeText,
         expenses_text: expensesText,
       });
