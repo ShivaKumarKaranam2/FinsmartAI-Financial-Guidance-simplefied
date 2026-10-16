@@ -17,9 +17,8 @@ langchain-astradb
 langchain-huggingface
 langchain-nvidia-ai-endpoints
 sentence-transformers
-torch
-torchvision
-torchaudio
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2+cpu
 crewai
 crewai-tools
 litellm
