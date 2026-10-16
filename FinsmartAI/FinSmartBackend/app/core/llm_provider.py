@@ -395,11 +395,14 @@ def _text(content) -> str:
 
 def _call_space(history: list, max_tokens: int, temperature: float,
                 url: Optional[str] = None, fn: Optional[str] = None,
-                timeout: int = 180, retries: int = 8) -> str:
+                timeout: int = 60, retries: int = 2) -> str:
     """Call the HF Space Gradio API (queue + SSE) and return the assistant reply text.
 
     Handles ZeroGPU cold starts / sleep by retrying on 502/503 with backoff. `history`
     must be a list of {role, content} dicts where content is in Gradio parts format.
+
+    Attempts the primary (fine-tuned) model at most `retries` (default 2) times; after
+    that the caller falls back to NVIDIA NIM, then Groq.
     """
     import time, json, requests
 
